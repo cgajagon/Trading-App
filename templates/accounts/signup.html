@@ -1,0 +1,50 @@
+{% load crispy_forms_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta
+        content="text/html; charset=UTF-8" http-equiv="Content-Type">
+        <!-- Meta, title, CSS, favicons, etc. -->
+        <meta charset="utf-8">
+        <meta content="IE=edge" http-equiv="X-UA-Compatible">
+        <meta content="width=device-width, initial-scale=1" name="viewport">
+
+        <title>xPortal|Login</title>
+
+        <!-- Bootstrap -->
+        <link
+        href="/static/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link
+        href="/static/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+        <!-- NProgress -->
+        <link
+        href="/static/vendors/nprogress/nprogress.css" rel="stylesheet">
+        <!-- Animate.css -->
+        <link
+        href="/static/vendors/animate.css/animate.min.css" rel="stylesheet">
+
+        <!-- Custom Theme Style -->
+        <link href="/static/build/css/custom.min.css" rel="stylesheet">
+    </head>
+
+    <body class="login">
+        <div>
+            <div class="login_wrapper">
+                <div class="animate form login_form">
+                    <section class="login_content">
+                        <form method="post">
+                            <h1>xPortal</h1>
+                            {% csrf_token %}
+                            {{form|crispy}}
+                            <button class="btn btn-default submit" type="submit">Sign Up</button>
+                            <button class="btn btn-default submit" onclick="javascript:history.go(-1)" >Cancel</button>
+                            </div>
+                        </form>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
