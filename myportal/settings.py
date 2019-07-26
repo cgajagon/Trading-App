@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from decouple import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,7 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
-    'tooling.apps.ToolingConfig',
+    'trading.apps.TradingConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
+    'rest_framework',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -127,7 +129,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LOGIN_REDIRECT_URL = '/tooling/'
+LOGIN_REDIRECT_URL = '/trading/'
 
 LOGOUT_REDIRECT_URL = '/accounts/login'
 
@@ -136,3 +138,7 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+OXFORD_APP_ID = config('OXFORD_APP_ID', default='')
+
+OXFORD_APP_KEY = config('OXFORD_APP_KEY', default='')
