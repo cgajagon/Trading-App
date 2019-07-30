@@ -12,7 +12,7 @@ import json
 import requests
 import pandas as pd
 
-from trading.forms import DictionaryForm, QuoteForm, SymbolForm
+from trading import forms
 from trading import models
 from trading import serializers
 from trading import services
@@ -35,11 +35,13 @@ class SymbolsListView(ListView):
     model = models.Symbols
     context_object_name = 'symbols_list'
 
-class SymbolsListView2(TemplateView):
-    template_name = 'trading/symbols.html'
+class ChartView(TemplateView):
+    template_name = 'trading/chart.html'
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['symbols_list'] = services.get_symbols()
+        context['symbol'] = self.kwargs['symbol']
+        context['range'] = self.kwargs['range']
         return context
 
 class WatchSymbolListView(ListView):
@@ -66,29 +68,40 @@ class WatchSymbolUpdateView(UpdateView):
     template_name = 'trading/watchsymbols_update.html'
     fields = '__all__'
 
-def HistoryList(request):
-    symbols_list = services.get_symbols()
-    search_result = {}
-    if 'symbol' in request.GET:
-        form = SymbolForm(request.GET)
-        if form.is_valid():
-            symbol = form.search()
-            search_result = services.get_history(symbol)
-    else:
-        form = SymbolForm()
-    return render(request, 'trading/historical.html', {'symbols_list': symbols_list, 'form': form, 'search_result': search_result})
+# API Views
+class SymbolsAPI(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request, format=None):
+        data = services.get_symbols()  
+        return Response(data)
 
 class ChartHistoricalAPI(APIView):
     authentication_classes = []
     permission_classes = []
 
-    def get(self, request, symbol, format=None):
-        raw_data = services.get_history(symbol)
+    def get(self, request, format=None, **kwargs):
+        symbol = self.kwargs['symbol']
+        range = self.kwargs['range']
+        data = services.get_chart_data(symbol, range)  
+    
+        return Response(data)
+
+class ChartHistoricalAPI2(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request, symbol, time_interval, time_range, format=None):
+        raw_data = services.get_chart_data2(symbol, time_interval, time_range)
         df = pd.DataFrame(raw_data)
         data = {
             'date':list(df['date']),
             'high':list(df['high']),
             'low':list(df['low']),
+            'open':list(df['open']),
+            'close':list(df['close']),
+            'volume':list(df['volume']),
         }
         return Response(data)
 

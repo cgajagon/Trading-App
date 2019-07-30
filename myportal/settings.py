@@ -139,6 +139,6 @@ MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-OXFORD_APP_ID = config('OXFORD_APP_ID', default='')
+X_RapidAPI_Host = config('X_RapidAPI_Host', default='')
 
-OXFORD_APP_KEY = config('OXFORD_APP_KEY', default='')
+X_RapidAPI_Key = config('X_RapidAPI_Key', default='')

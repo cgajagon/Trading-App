@@ -1,0 +1,59 @@
+{% extends 'trading/index.html' %}
+
+{% block page %}
+
+<div class="row">
+    <div class="col-md-12">
+        <p>{{symbol}}</p>
+        <canvas id="myChart" width="400" height="400"></canvas>
+    </div>
+</div>
+
+{% endblock page%}
+
+{% block javascripts %}
+{{ block.super }}
+
+<script>
+    var endpoint = '/trading/api/chart/historical/{{symbol}}/{{range}}'
+
+    $.ajax({
+        method: "GET",
+        url: endpoint,
+        success: function (data) {
+            var ctx = document.getElementById("myChart").getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.date,
+                    datasets: [
+                        {
+                        label: 'Max Price per day',
+                        data: data.high,
+                        borderColor: 'rgb(255, 99, 132)',
+                         },
+                         {
+                        label: 'Min Price per day',
+                        data: data.low,
+                        borderColor: 'rgb(255, 99, 132)',
+                         },
+                    ]
+                },
+                options: {
+                    reponsive: true,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        },
+        error: function (error_data) {
+            console.log(error_data)
+        }
+    })
+</script>
+{% endblock javascripts %}
