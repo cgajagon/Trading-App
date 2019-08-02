@@ -6,7 +6,7 @@ from django.conf import settings
 from rest_framework.response import Response
 from rest_framework import status
 
-from trading.serializers import SymbolsSerializer
+from trading import serializers, models
 
 # 3rd Part API: iextrading.com
 def get_symbols():
@@ -32,14 +32,15 @@ def get_chart_data(symbol, time_interval):
     df_resample['min_low'] = df['low'].resample(interval).min()
     df_resample['mean_volume'] = df['volume'].resample(interval).mean()
     df_resample['date'] = df_resample.index.date
-    data = {
-            'date':list(df_resample['date']),
-            'high':list(df_resample['max_high']),
-            'low':list(df_resample['min_low']),
-            'open':list(df_resample['min_open']),
-            'close':list(df_resample['min_close']),
-            'volume':list(df_resample['mean_volume']),
-        }
+    data = df_resample.to_dict('records')
+    #data = {
+    #        'date':list(df_resample['date']),
+    #        'high':list(df_resample['max_high']),
+    #        'low':list(df_resample['min_low']),
+    #        'open':list(df_resample['min_open']),
+    #        'close':list(df_resample['min_close']),
+    #        'volume':list(df_resample['mean_volume']),
+    #}
     return data
 
 # 3rd Part API: yahoo-finance.com

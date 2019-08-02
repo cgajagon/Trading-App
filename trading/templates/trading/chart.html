@@ -4,8 +4,13 @@
 
 <div class="row">
     <div class="col-md-12">
-        <p>{{symbol}}</p>
-        <canvas id="myChart" width="400" height="400"></canvas>
+        <h2>{{symbol.symbol}} - {{symbol.name}}</h2>
+        <select id="chartType" name="chartType" selected="selected">
+            <option value="ohlc" selected>OHLC</option>
+            <option value="line">Linear</option>
+        </select>
+        
+        <div id="chartContainer" style="height: 500px; width: 100%;"></div>
     </div>
 </div>
 
@@ -15,45 +20,48 @@
 {{ block.super }}
 
 <script>
-    var endpoint = '/trading/api/chart/historical/{{symbol}}/{{range}}'
-
+    var endpoint = '/trading/api/chart/{{symbol}}/{{range}}'
+    var dataPointsOHLC = [];
+    var dataPointsLinear = [];
+    var myChart = new CanvasJS.Chart("chartContainer", {
+        zoomEnabled: true,
+        axisX: {
+            interval: 4,
+            intervalType: "month",
+        },
+        data: [{
+            type: "ohlc",
+            dataPoints: dataPointsOHLC,
+        }],
+    });
     $.ajax({
         method: "GET",
         url: endpoint,
         success: function (data) {
-            var ctx = document.getElementById("myChart").getContext('2d');
-            var myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: data.date,
-                    datasets: [
-                        {
-                        label: 'Max Price per day',
-                        data: data.high,
-                        borderColor: 'rgb(255, 99, 132)',
-                         },
-                         {
-                        label: 'Min Price per day',
-                        data: data.low,
-                        borderColor: 'rgb(255, 99, 132)',
-                         },
-                    ]
-                },
-                options: {
-                    reponsive: true,
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
+            $.each(data, function (key, value) {
+                dataPointsOHLC.push({
+                    x: new Date(value.date),
+                    y: [value.min_open, value.max_high, value.min_low, value.min_close],
+                });
+                dataPointsLinear.push({
+                    x: new Date(value.date),
+                    y: value.max_high,
+                });
             });
+            myChart.render();
         },
         error: function (error_data) {
             console.log(error_data)
         }
-    })
+    });
+    var jsonData = { "ohlc": dataPointsOHLC, "line": dataPointsLinear }
+    var chartType = document.getElementById('chartType');
+    
+    chartType.addEventListener("change", function () {
+        var option = chartType.options[chartType.selectedIndex].value
+        myChart.options.data[0].type = option;
+        myChart.options.data[0].dataPoints = jsonData[option];
+        myChart.render();
+    });
 </script>
 {% endblock javascripts %}

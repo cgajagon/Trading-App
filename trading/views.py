@@ -19,6 +19,7 @@ from trading import services
 
 
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 from rest_framework import status
@@ -40,7 +41,8 @@ class ChartView(TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['symbol'] = self.kwargs['symbol']
+        symbol = self.kwargs['symbol']
+        context['symbol'] = models.Symbols.objects.get(symbol=symbol)
         context['range'] = self.kwargs['range']
         return context
 
@@ -69,12 +71,19 @@ class WatchSymbolUpdateView(UpdateView):
     fields = '__all__'
 
 # API Views
-class SymbolsAPI(APIView):
+class SymbolsListAPI(ListAPIView):
+    queryset = models.Symbols.objects.all()
+    serializer_class = serializers.SymbolsSerializer
+
+class ChartHistoricalAPI(APIView):
     authentication_classes = []
     permission_classes = []
 
-    def get(self, request, format=None):
-        data = services.get_symbols()  
+    def get(self, request, format=None, **kwargs):
+        symbol = self.kwargs['symbol']
+        range = self.kwargs['range']
+        data = services.get_chart_data(symbol, range)  
+    
         return Response(data)
 
 class ChartHistoricalAPI(APIView):

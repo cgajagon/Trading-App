@@ -20,10 +20,11 @@ class Symbols(models.Model):
     ]
 
     symbol = models.CharField(max_length=20, null=False, blank=False, unique=True, primary_key=True)
-    name = models.CharField(max_length=200, null=False, blank=False)
+    name = models.CharField(max_length=200, null=True, blank=True)
     isEnabled = models.BooleanField(null=False, blank=False, default=True)
-    symbol_type = models.CharField(max_length=10, choices=TYPE)
     iexId = models.IntegerField()
+    date = models.DateField(default=datetime.date.today)
+    symbol_type = models.CharField(max_length=20, choices=TYPE, default='AD')
     
     def __str__(self):
         return self.symbol
