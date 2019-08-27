@@ -19,10 +19,9 @@
         <tr>
           <td>{{symbol.symbol}}</td>
           <td>{{symbol.name}}</td>
-          <td>{{symbol.symbol_types}}</td>
+          <td>{{symbol.symbol_type}}</td>
           <td class="text-center">
-            <a class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">modal</a>
-            <a class="btn btn-success" href="{% url 'trading:chart' symbol=symbol.symbol range='max' %}">Historical</a>
+            <a class="btn btn-primary" href="{% url 'trading:chart' symbol=symbol.symbol range='max' %}">Historical</a>
           </td>
         </tr>
         {% endfor %}
@@ -31,24 +30,10 @@
 
   </div>
 </div>
-<!--Modal-->
-<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      ...
-    </div>
-  </div>
-</div>
-<!--End Modal-->
-
 
 {% block javascripts %}
 {{ block.super }}
-<script>
-  $(document).ready(function () {
-    $('#table_id').DataTable();
-  });
-</script>
+
 
 {% endblock javascripts %}
 

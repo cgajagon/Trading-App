@@ -1,0 +1,71 @@
+{% extends 'trading/index.html' %}
+{% load crispy_forms_tags %}
+
+{% block page %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>{{watchsymbol.symbol}} - {{watchsymbol.symbol.name}}</h5>
+            </div>
+            <!--Alerts-->
+            <div class="card-body">
+                <h6>Symbol Details</h6>
+                <p>Price: {{quote.price}}</p>
+                <p>Size: {{quote.size}}</p>
+                <p>
+                   Last Update: <script>document.write(new Date({{ quote.time }}))</script>
+                </p>
+            </div>
+            <div class="card-body">
+                <h6>Alerts</h6>
+                <div class="card-deck">
+                    {% for alert in watchsymbol.alertwatch_set.all %}
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <p class="card-text">Expected minimum price: {{alert.expected_min_price}}</p>
+                            <p class="card-text">Expected minimum price: {{alert.expected_max_price}}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">{{alert.date_enter}}</small>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal"
+                                        data-target="#popup">
+                                        Edit
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal"
+                                        data-target="#popup">
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <!-- Alert Form -->
+                <form action="{% url 'trading:alertwatch_create' watchsymbol.pk  %}" method="POST" role="form">
+                    {% csrf_token %}
+                    {{form|crispy}}
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </form>
+                <!-- End of Alert Form -->
+            </div>
+            <!--End of Alerts-->
+
+            <div class="card-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal-->
+<div id="popup" class="modal fade" role="dialog"></div>
+<!--End Modal-->
+
+{% block javascripts %}
+{{ block.super }}
+{% endblock javascripts %}
+
+{% endblock page%}

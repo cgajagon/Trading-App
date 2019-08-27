@@ -17,7 +17,7 @@
         <a class="nav-link" href="{% url 'trading:symbols' %}">Trading Center</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Watch List</a>
+        <a class="nav-link" href="{% url 'trading:watchsymbol_list' %}">Watch List</a>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true"
@@ -30,8 +30,8 @@
       </li>
     </ul>
     <form class="form-inline mt-2 mt-md-0">
-      <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" id="autocomplete"
-        name="country">
+      <input class="form-control mr-sm-2" type="text" placeholder="Symbol" aria-label="Search" id="myInput"
+        name="search">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
   </div>
@@ -57,7 +57,25 @@
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
 <!-- Optional JavaScript -->
+<script>
+  $(document).ready(function () {
+    $("#myInput").on("keyup", function () {
+      var value = $(this).val().toLowerCase();
+      $("#myTable tr").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+</script>
 
+<script>
+    function open_modal(url) {
+        $('#popup').load(url, function () {
+            $(this).modal('show');
+        });
+        return false;
+    }
+</script>
 
 {% endblock %}
 

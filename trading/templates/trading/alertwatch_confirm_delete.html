@@ -1,0 +1,18 @@
+{% load crispy_forms_tags %}
+
+<div class="modal-dialog modal-sm">
+    <div class="modal-content">
+        <div class="modal-body">
+            <h3>Delete</h3>
+            <p>Confirm deletion of the alert</p>
+            <form role="form" action="{% url 'trading:alertwatch_delete' object.pk %}" method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <input type="submit" class="btn btn-danger" name="submit" value="Delete">
+                <button type="button" class="btn btn-default" onclick="return window.load('')">
+                    Cancel
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

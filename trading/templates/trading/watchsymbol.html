@@ -1,0 +1,25 @@
+{% load crispy_forms_tags %}
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Details</h3>
+        </div>
+        <div class="modal-body">
+            {% if object %}
+            <form role="form" action="{% url 'trading:watchsymbol_update' object.pk %}" method="post">
+            {% else %}
+            <form role="form" action="{% url 'trading:watchsymbol_create' %}" method="post">
+            {% endif %}
+
+            {% csrf_token %}
+            {{ form|crispy }}
+
+            <input type="submit" class="btn btn-primary" name="submit" value="Save">
+            <a class="btn btn-danger" href="{% url 'trading:watchsymbol_list' %}" >
+                Cancel
+            </a>
+            </form>
+        </div>
+    </div>
+</div>

@@ -48,14 +48,20 @@ class ChartView(TemplateView):
 
 class WatchSymbolListView(ListView):
     model = models.WatchSymbols
-    context_object_name = 'project_list'
-    template_name = 'trading/watchsymbols_list.html'
+    context_object_name = 'watchsymbol_list'
+    template_name = 'trading/watchsymbol_list.html'
 
 class WatchSymbolCreateView(CreateView):
     model = models.WatchSymbols
-    fields = '__all__'
-    template_name = 'trading/watchsymbols_new.html'
-    success_url = reverse_lazy('trading:project_list')
+    form_class = forms.WatchSymbolForm
+    template_name = 'trading/watchsymbol.html'
+    success_url = reverse_lazy('trading:watchsymbol_list')
+
+class WatchSymbolUpdateView(UpdateView):
+    model = models.WatchSymbols
+    form_class = forms.WatchSymbolForm
+    template_name = 'trading/watchsymbol.html'
+    success_url = reverse_lazy('trading:watchsymbol_list')
 
 class WatchSymbolDeleteView(DeleteView):
     model = models.WatchSymbols
@@ -63,28 +69,49 @@ class WatchSymbolDeleteView(DeleteView):
 
 class WatchSymbolDetailView(DetailView):
     model = models.WatchSymbols
-    template_name = 'trading/watchsymbols_detail.html'
+    template_name = 'trading/watchsymbol_detail.html'
+    context_object_name = 'watchsymbol'
 
-class WatchSymbolUpdateView(UpdateView):
-    model = models.WatchSymbols
-    template_name = 'trading/watchsymbols_update.html'
-    fields = '__all__'
+    def get_context_data(self, **kwargs):
+        context = super(WatchSymbolDetailView, self).get_context_data(**kwargs)
+        context['form'] = forms.AlertWatchForm(initial={
+            'watched_symbol':self.object.pk
+            })
+        quotes = services.get_quote(self.object.symbol)
+        for quote in quotes:
+            context['quote'] = quote
+        return context
+
+class AlertWatchCreateView(CreateView):
+    form_class = forms.AlertWatchForm
+    template_name = 'trading/alertwatch_create.html'
+    def get_success_url(self):
+        return reverse_lazy('trading:watchsymbol_detail', kwargs={'watchsymbol': self.object.watched_symbol.pk})
+
+class AlertWatchUpdateView(UpdateView):
+    model = models.AlertWatch
+    form_class = forms.WatchSymbolForm
+    template_name = 'trading/alertwatch_update.html'
+    def get_success_url(self):
+        return reverse_lazy('trading:watchsymbol_detail', kwargs={'watchsymbol': self.object.watched_symbol.pk})
+        
+class AlertWatchDeleteView(DeleteView):
+    model = models.AlertWatch
+    def get_success_url(self):
+        return reverse_lazy('trading:watchsymbol_detail', kwargs={'watchsymbol': self.object.watched_symbol.pk})
 
 # API Views
 class SymbolsListAPI(ListAPIView):
     queryset = models.Symbols.objects.all()
     serializer_class = serializers.SymbolsSerializer
 
-class ChartHistoricalAPI(APIView):
-    authentication_classes = []
-    permission_classes = []
-
-    def get(self, request, format=None, **kwargs):
-        symbol = self.kwargs['symbol']
-        range = self.kwargs['range']
-        data = services.get_chart_data(symbol, range)  
+class SymbolsAutocompleteAPI(APIView):
     
-        return Response(data)
+    def get(self, request, format=None, **kwargs):
+            search = self.kwargs['search']
+            data = models.SymbolsAutocomplete.objects.get(search=search)
+            serializer = serializers.SymbolsAutocompleteSerializer(instance = data)
+            return Response(serializer.data)    
 
 class ChartHistoricalAPI(APIView):
     authentication_classes = []
