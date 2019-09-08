@@ -52,8 +52,6 @@ def get_recommendations():
         df_recomendation = pd.DataFrame([max_high]).append(df_recomendation)
     print(df_recomendation)
 
-
-
 def create_update_symbolsautocomplete():
     # Delete all the data in the SymbolsAutocomplete table and SymbolsAutocompleteRelated
     current_autocomplete = models.SymbolsAutocomplete.objects.all()
