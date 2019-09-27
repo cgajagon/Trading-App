@@ -4,7 +4,7 @@ import requests
 import json
 
 def create_update_symbols():
-    symbols = services.get_symbols
+    symbols = services.get_symbols()
     for element in symbols:
         symbol_obj, created = models.Symbols.objects.update_or_create(
             symbol=element.get('symbol', None),
