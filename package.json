@@ -3,9 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "10.15.0"
+  },
   "scripts": {
     "build": "webpack --mode production",
-    "watch": "webpack --watch --mode development"
+    "watch": "webpack --watch --mode development",
+    "heroku-postbuild": "npm run dist",
+    "postinstall": "npm run build"
   },
   "author": "",
   "license": "ISC",
