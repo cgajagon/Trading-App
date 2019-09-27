@@ -11,24 +11,25 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os, sys
+# Import for decouple keys
 from decouple import config
+# Import for deployment en Heroku
+import django_heroku
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import dj_database_url
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '%x_xa$l0cnnulyr(tng!)tzcygg)8qgy(b4=t_cq5s!=g1t!=^'
+SECRET_KEY = config('SECRET_KEY',default=())
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -43,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'rest_framework',
+    'django_celery_beat',
+    'webpack_loader',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -76,7 +79,9 @@ TEMPLATES = [
     },
 ]
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'assets')]
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 WEBPACK_LOADER = {
     'DEFAULT': {
@@ -131,22 +136,30 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.2/howto/static-files/
-
-STATIC_URL = '/static/'
-
 LOGIN_REDIRECT_URL = '/trading/'
-
 LOGOUT_REDIRECT_URL = '/accounts/login'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 MEDIA_URL = '/media/'
-
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 X_RapidAPI_Host = config('X_RapidAPI_Host', default='')
-
 X_RapidAPI_Key = config('X_RapidAPI_Key', default='')
+gmail_password = config('gmail_password', default='')
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'cgajagon@gmail.com' 
+EMAIL_HOST_PASSWORD = gmail_password
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+
+# For RabbitMQ
+CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_RESULT_BACKEND = 'amqp://localhost:5672'
+# Celery Data Format
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = "UTC"

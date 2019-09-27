@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse, reverse_lazy
 import datetime
 
 class Symbols(models.Model):
@@ -29,6 +30,7 @@ class Symbols(models.Model):
     def __str__(self):
         return self.symbol
 
+
 class SymbolsAutocomplete(models.Model):
     search = models.CharField(max_length=20, null=False, blank=False, unique=True, primary_key=True)
 
@@ -56,6 +58,10 @@ class AlertWatch(models.Model):
 
     def __str__(self):
         return '%s on %s' % (self.watched_symbol, self.date_enter)
+
+    # Return to Watch Symbol Detail View
+    def get_absolute_url(self):
+        return reverse_lazy('watchsymbol_detail', args=[str(self.watched_symbol.pk)])
 
 class HistoricalPrices(models.Model):
     symbol = models.ForeignKey(Symbols, on_delete=models.CASCADE, null=False, blank=False)

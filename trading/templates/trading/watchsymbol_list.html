@@ -1,78 +1,35 @@
-{% extends 'trading/index.html' %}
+{% extends 'trading/base.html' %}
 
-{% block page %}
-
-<style>
-    .accordion {
-        background-color: #eee;
-        color: #444;
-        cursor: pointer;
-        padding: 18px;
-        width: 100%;
-        border: none;
-        text-align: left;
-        outline: none;
-        font-size: 15px;
-        transition: 0.4s;
-    }
-
-    .accordion:hover {
-        background-color: #ccc;
-    }
-
-    .panel {
-        padding: 0 18px;
-        display: none;
-        background-color: white;
-        overflow: hidden;
-    }
-</style>
+{% block content %}
 
 <div class="row">
     <div class="col-md-12">
         <a onclick="return open_modal('{% url 'trading:watchsymbol_create' %}')" class="btn btn-primary"
             data-toggle="modal" data-target="#popup">New</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
         {% for watchsymbol in watchsymbol_list %}
-        <button class="accordion">
-            <h6>{{watchsymbol.symbol}}- {{watchsymbol.symbol.name}}</h6>
-            <div class="btn-group style:"text-right">
-                    <a onclick="return open_modal('{% url 'trading:watchsymbol_update' watchsymbol.pk %}')"
-                        class="btn btn-primary btn-sm" data-toggle="modal" data-target="#popup">Update</a>
-                    <a href="{% url 'trading:watchsymbol_detail' watchsymbol.pk %}"
-                        class="btn btn-secondary btn-sm">Details</a>
-                    <a href="{% url 'trading:chart' symbol=watchsymbol.symbol range='max' %}"
-                        class="btn btn-success btn-sm">Historical</a>
-                </div>
-            </button>
         <div class="panel">
-            <p>{{watchsymbol.notes}}</p>
-            
+            <h6>{{watchsymbol.symbol}}- {{watchsymbol.symbol.name}}</h6>
+            <div class="btn-group" style="text-right">
+                <a onclick="return open_modal('{% url 'trading:watchsymbol_update' watchsymbol.pk %}')"
+                    class="btn btn-primary btn-sm" data-toggle="modal" data-target="#popup">Update</a>
+                <a href="{% url 'trading:watchsymbol_detail' watchsymbol.pk %}"
+                    class="btn btn-secondary btn-sm">Details</a>
+                <a href="{% url 'trading:chart' symbol=watchsymbol.symbol range='max' %}"
+                    class="btn btn-success btn-sm">Historical</a>
+            </div>
         </div>
         {% endfor %}
     </div>
 </div>
 
 <!--Modal-->
-<div id="popup" class="modal fade" role="dialog"></div>
-<!--End Modal-->
+<div id="popup" class="modal fade" role="dialog">
+    <div class="modal-dialog"></div>
+</div>
 
-{% block javascripts %}
-{{ block.super }}
-{% endblock javascripts %}
-<script>
-    var acc = document.getElementsByClassName("accordion");
-    var i;
-
-    for (i = 0; i < acc.length; i++) {
-        acc[i].addEventListener("click", function () {
-            this.classList.toggle("active");
-            var panel = this.nextElementSibling;
-            if (panel.style.display === "block") {
-                panel.style.display = "none";
-            } else {
-                panel.style.display = "block";
-            }
-        });
-    }
-</script>
-{% endblock page%}
+{% endblock content %}

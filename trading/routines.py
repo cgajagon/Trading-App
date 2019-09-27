@@ -57,6 +57,7 @@ def create_update_symbolsautocomplete():
     current_autocomplete = models.SymbolsAutocomplete.objects.all()
     current_autocomplete.delete()
 
+    # Create all the data on SymbolsAutocomplete table and SymbolsAutocompleteRelated after the old data is removed
     data = models.Symbols.objects.all().values("symbol")
     autocompleteList = list()
     searchList = list()

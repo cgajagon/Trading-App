@@ -1,6 +1,6 @@
-{% extends 'trading/index.html' %}
+{% extends 'trading/base.html' %}
 
-{% block page %}
+{% block content %}
 
 <div class="row">
     <div class="col-md-12">
@@ -14,7 +14,7 @@
     </div>
 </div>
 
-{% endblock page%}
+{% endblock content %}
 
 {% block javascripts %}
 {{ block.super }}
@@ -64,4 +64,5 @@
         myChart.render();
     });
 </script>
+
 {% endblock javascripts %}

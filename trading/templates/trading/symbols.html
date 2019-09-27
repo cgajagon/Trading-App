@@ -1,11 +1,11 @@
-{% extends 'trading/index.html' %}
+{% extends 'trading/base.html' %}
 
-{% block page %}
+{% block content %}
 
 <div class="row">
   <div class="col-md-12">
 
-    <table id="table_id" class="table table-striped table-bordered">
+    <table id="myTable" class="table table-striped table-bordered">
       <thead>
         <tr>
           <th>Symbol</th>
@@ -31,10 +31,4 @@
   </div>
 </div>
 
-{% block javascripts %}
-{{ block.super }}
-
-
-{% endblock javascripts %}
-
-{% endblock page%}
+{% endblock content %}

@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
-
+from django.core.mail import send_mail
 
 import json
 import requests
@@ -29,7 +29,7 @@ from rest_framework.viewsets import ModelViewSet
 
 
 class HomePageView(TemplateView):
-    template_name = "trading/index.html"
+    template_name = "trading/base.html"
 
 class SymbolsListView(ListView):
     template_name = "trading/symbols.html"
@@ -54,13 +54,13 @@ class WatchSymbolListView(ListView):
 class WatchSymbolCreateView(CreateView):
     model = models.WatchSymbols
     form_class = forms.WatchSymbolForm
-    template_name = 'trading/watchsymbol.html'
+    template_name = 'trading/watchsymbol_edit.html'
     success_url = reverse_lazy('trading:watchsymbol_list')
 
 class WatchSymbolUpdateView(UpdateView):
     model = models.WatchSymbols
     form_class = forms.WatchSymbolForm
-    template_name = 'trading/watchsymbol.html'
+    template_name = 'trading/watchsymbol_edit.html'
     success_url = reverse_lazy('trading:watchsymbol_list')
 
 class WatchSymbolDeleteView(DeleteView):
@@ -141,3 +141,10 @@ class ChartHistoricalAPI2(APIView):
         }
         return Response(data)
 
+def email():
+    subject = 'Thank you for registering to our site'
+    message = ' it  means a world to us '
+    email_from = 'cgajagon@gmail.com'
+    recipient_list = ['cargaj2@hotmail.com',]
+    send_mail( subject, message, email_from, recipient_list, fail_silently=False)
+    return print(recipient_list)
