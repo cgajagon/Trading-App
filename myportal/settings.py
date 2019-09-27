@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'webpack_loader',
 ]
 
+
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
@@ -154,6 +155,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 X_RapidAPI_Host = config('X_RapidAPI_Host', default='')
 X_RapidAPI_Key = config('X_RapidAPI_Key', default='')
 gmail_password = config('gmail_password', default='')
+
+# During development only
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'cgajagon@gmail.com' 

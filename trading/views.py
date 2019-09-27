@@ -28,15 +28,15 @@ from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.viewsets import ModelViewSet
 
 
-class HomePageView(TemplateView):
+class HomePageView(LoginRequiredMixin,TemplateView):
     template_name = "trading/base.html"
 
-class SymbolsListView(ListView):
+class SymbolsListView(LoginRequiredMixin, ListView):
     template_name = "trading/symbols.html"
     model = models.Symbols
     context_object_name = 'symbols_list'
 
-class ChartView(TemplateView):
+class ChartView(LoginRequiredMixin, TemplateView):
     template_name = 'trading/chart.html'
     
     def get_context_data(self, **kwargs):
@@ -46,28 +46,28 @@ class ChartView(TemplateView):
         context['range'] = self.kwargs['range']
         return context
 
-class WatchSymbolListView(ListView):
+class WatchSymbolListView(LoginRequiredMixin, ListView):
     model = models.WatchSymbols
     context_object_name = 'watchsymbol_list'
     template_name = 'trading/watchsymbol_list.html'
 
-class WatchSymbolCreateView(CreateView):
+class WatchSymbolCreateView(LoginRequiredMixin, CreateView):
     model = models.WatchSymbols
     form_class = forms.WatchSymbolForm
     template_name = 'trading/watchsymbol_edit.html'
     success_url = reverse_lazy('trading:watchsymbol_list')
 
-class WatchSymbolUpdateView(UpdateView):
+class WatchSymbolUpdateView(LoginRequiredMixin, UpdateView):
     model = models.WatchSymbols
     form_class = forms.WatchSymbolForm
     template_name = 'trading/watchsymbol_edit.html'
     success_url = reverse_lazy('trading:watchsymbol_list')
 
-class WatchSymbolDeleteView(DeleteView):
+class WatchSymbolDeleteView(LoginRequiredMixin, DeleteView):
     model = models.WatchSymbols
     success_url = reverse_lazy('trading:tool_list')
 
-class WatchSymbolDetailView(DetailView):
+class WatchSymbolDetailView(LoginRequiredMixin, DetailView):
     model = models.WatchSymbols
     template_name = 'trading/watchsymbol_detail.html'
     context_object_name = 'watchsymbol'
@@ -82,20 +82,20 @@ class WatchSymbolDetailView(DetailView):
             context['quote'] = quote
         return context
 
-class AlertWatchCreateView(CreateView):
+class AlertWatchCreateView(LoginRequiredMixin, CreateView):
     form_class = forms.AlertWatchForm
     template_name = 'trading/alertwatch_create.html'
     def get_success_url(self):
         return reverse_lazy('trading:watchsymbol_detail', kwargs={'watchsymbol': self.object.watched_symbol.pk})
 
-class AlertWatchUpdateView(UpdateView):
+class AlertWatchUpdateView(LoginRequiredMixin, UpdateView):
     model = models.AlertWatch
     form_class = forms.WatchSymbolForm
     template_name = 'trading/alertwatch_update.html'
     def get_success_url(self):
         return reverse_lazy('trading:watchsymbol_detail', kwargs={'watchsymbol': self.object.watched_symbol.pk})
         
-class AlertWatchDeleteView(DeleteView):
+class AlertWatchDeleteView(LoginRequiredMixin, DeleteView):
     model = models.AlertWatch
     def get_success_url(self):
         return reverse_lazy('trading:watchsymbol_detail', kwargs={'watchsymbol': self.object.watched_symbol.pk})

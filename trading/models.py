@@ -42,7 +42,7 @@ class SymbolsAutocompleteRelation(models.Model):
     search = models.ForeignKey(SymbolsAutocomplete, on_delete=models.CASCADE, null=False, blank=False, related_name='related_symbols')
 
 class WatchSymbols(models.Model):
-    symbol = models.ForeignKey(Symbols, on_delete=models.CASCADE, null=False, blank=False, unique=True)
+    symbol = models.OneToOneField(Symbols, on_delete=models.CASCADE, null=False, blank=False)
     date_enter = models.DateField(default=datetime.date.today)
     notes = models.TextField(max_length=200, null=True, blank=True)
 
