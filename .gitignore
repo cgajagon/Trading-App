@@ -9,3 +9,6 @@ node_modules/
 
 # Databases
 .sqlite3
+
+# Bundles
+trading/static/bundles/

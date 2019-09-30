@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import HiddenInput
-from  trading import models
+from  trading import models, widgets
 
 class WatchSymbolForm(forms.ModelForm):
     class Meta:
@@ -9,6 +9,8 @@ class WatchSymbolForm(forms.ModelForm):
         widgets = {
             'notes':forms.Textarea(attrs={
                 'rows':2,
+            }),
+            'symbol': widgets.Select2Widget(attrs={
             })
         }
 
