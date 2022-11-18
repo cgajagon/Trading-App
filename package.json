@@ -28,7 +28,7 @@
     "select2": "^4.0.10",
     "webpack": "^4.41.0",
     "webpack-bundle-tracker": "^0.4.2-beta",
-    "webpack-cli": "^3.3.9"
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {}
 }
